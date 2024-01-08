@@ -3,6 +3,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.*;
+import static CodeDecodeFunc.*;
 
 public class Warp_Array implements Serializable {
     public static final long serialversionUID = 123L;
@@ -11,6 +12,7 @@ public class Warp_Array implements Serializable {
     private int lengthArray;
     public String compactString;
     private Map<Byte, List<Short>> bucket = new HashMap<>();
+
 
     public Warp_Array(short[] input) {
         array = Arrays.copyOf(input, input.length);
@@ -34,20 +36,7 @@ public class Warp_Array implements Serializable {
         array=deserializeArray();
     }
 
-    private String fillStringSerialise() {
-        StringBuilder strBuild = new StringBuilder();
-        for (Map.Entry<Byte, List<Short>> element : bucket.entrySet()) {
-            if (!element.getValue().isEmpty()) {
-                strBuild.append(" ").append(element.getKey());
-                for (Short valShort : element.getValue()) {
-                    char ch = (char) (short) valShort;
-                    strBuild.append(ch);
-                }
-            }
-        }
-        return strBuild.toString();
 
-    }
 
     private short[] deserializeArray() {
         array = new short[lengthArray];
