@@ -9,7 +9,6 @@ public class Warp_Array implements Serializable {
     private short[] array;
     private transient static final byte step = 93;
     private int lengthArray;
-    private transient short[] deserializeArray;
     public String compactString;
     private Map<Byte, List<Short>> bucket = new HashMap<>();
 
@@ -24,12 +23,15 @@ public class Warp_Array implements Serializable {
 
     private void writeObject(ObjectOutputStream oos) throws IOException {
         fillBucketDigit();
-        oos.defaultWriteObject();//For default serialization of Student class
-
+        oos.defaultWriteObject();
         this.compactString = fillStringSerialise();
+        oos.writeObject(this.compactString);
+    }
 
-        //serialization of regNo
-//        oos.writeObject(this.regNo);
+    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+        ois.defaultReadObject();
+        compactString = (String) ois.readObject();
+        array=deserializeArray();
     }
 
     private String fillStringSerialise() {
@@ -48,33 +50,29 @@ public class Warp_Array implements Serializable {
     }
 
     private short[] deserializeArray() {
-        deserializeArray = new short[lengthArray];
+        array = new short[lengthArray];
         int stepDeserializeArray = 0;
         byte mnoshitel = 0;
-        char[] chars = compactString.toString().toCharArray();
+        char[] chars = compactString.toCharArray();
         for (int i = 0; i < chars.length; i++) {
             if (chars[i] == ' ') {
                 mnoshitel = Byte.parseByte(String.valueOf(chars[i + 1]));
                 i++;
             } else {
                 if (mnoshitel == 0) {
-                    deserializeArray[stepDeserializeArray] = (short) (chars[i] - step);
+                    array[stepDeserializeArray] = (short) (chars[i] - step);
                 } else if (mnoshitel == 1) {
-                    deserializeArray[stepDeserializeArray] = (short) (chars[i]);
+                    array[stepDeserializeArray] = (short) (chars[i]);
                 } else {
-                    deserializeArray[stepDeserializeArray] = (short) (chars[i] + ((mnoshitel - 1) * step));
+                    array[stepDeserializeArray] = (short) (chars[i] + ((mnoshitel - 1) * step));
                 }
                 stepDeserializeArray++;
             }
         }
-        return deserializeArray;
+        return array;
     }
 
-    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
-//        ois.defaultReadObject();////For default deserialization of Student class
-//        String s = (String)ois.readObject();
-//        this.regNo = s;
-    }
+
 
     private void fillBucketDigit() {
         for (int i = 0; i < array.length; i++) {
@@ -94,19 +92,12 @@ public class Warp_Array implements Serializable {
         }
     }
 
-    public Map<Byte, List<Short>> getBucket() {
-        return bucket;
-    }
 
     public short[] getArray() {
         return array;
     }
 
     public String getStr() {
-        return compactString.toString();
-    }
-
-    public short[] getDeserializeArray() {
-        return deserializeArray;
+        return compactString;
     }
 }
