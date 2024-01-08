@@ -6,33 +6,49 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.*;
 
-public class Warperr_Array implements Serializable {
+/**
+ * Класс оболочка массива
+ */
+public class Warper_Array implements Serializable {
     public static final long serialversionUID = 123L;
-    private short[] array;
+    private transient short[] array;
     private transient static final byte step = 93;
     private int lengthArray;
     public String compactString;
 
-    public Warperr_Array(short[] input) {
-        array = Arrays.copyOf(input, input.length);
-        lengthArray = input.length;
-        compactString = null;
+    public Warper_Array(short[] input) {
+        array = Arrays.copyOf(input, input.length);  // Применяем глубокое копирование для входного массива
+        lengthArray = input.length;                  // запоминаем длину входного массива
+        compactString = null;                        // Если заходит новый массив, нужно обнулить строкове представление
     }
 
-
+    /**
+     * Изменяю вручную способ сериализации при записи в файл
+     * @param oos
+     * @throws IOException
+     */
     private void writeObject(ObjectOutputStream oos) throws IOException {
-
         oos.defaultWriteObject();
         this.compactString = generateCompactString();
         oos.writeObject(this.compactString);
     }
 
+    /**
+     * Изменяю вручную процесс десириализации из файла
+     * @param ois
+     * @throws ClassNotFoundException
+     * @throws IOException
+     */
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
         ois.defaultReadObject();
         compactString = (String) ois.readObject();
         array = CodeDecodeFunc.deserializeArray(compactString, lengthArray);
     }
 
+    /**
+     * Генерация строкового представления на основе текущего массива
+     * @return
+     */
     public String generateCompactString() {
         Map<Byte, List<Short>> bucketDigit = CodeDecodeFunc.fillBucketDigit(array);
         compactString = CodeDecodeFunc.fillStringSerialise(bucketDigit);
@@ -43,6 +59,10 @@ public class Warperr_Array implements Serializable {
         return array;
     }
 
+    /**
+     * Если представление строковое уже есть отдаем результат.
+     * @return
+     */
     public String getCompactString() {
         if (compactString == null) {
             throw new RuntimeException(
@@ -69,8 +89,16 @@ public class Warperr_Array implements Serializable {
 
     }
 
+    /**
+     * Отдельный статичный класс отвечающий за логику функции сер/десер
+     */
     private static class CodeDecodeFunc {
 
+        /**
+         * Помещаем наполненные корзины в метод, которые их потом переведет в строковое представление
+         * @param bucket
+         * @return
+         */
         private static String fillStringSerialise(Map<Byte, List<Short>> bucket) {
             StringBuilder strBuild = new StringBuilder();
             for (Map.Entry<Byte, List<Short>> element : bucket.entrySet()) {
@@ -85,6 +113,12 @@ public class Warperr_Array implements Serializable {
             return strBuild.toString();
         }
 
+        /**
+         * Сортируем числа по корзинам. Приводим из к диапазону 33-126, а ключ Byte будет указывать, как нам
+         * вернуть прежнее значени числа
+         * @param array
+         * @return
+         */
         private static Map<Byte, List<Short>> fillBucketDigit(short[] array) {
             Map<Byte, List<Short>> bucket = new HashMap<>();
             bucket.put((byte) 0, new ArrayList<>());
@@ -109,6 +143,12 @@ public class Warperr_Array implements Serializable {
             return bucket;
         }
 
+        /**
+         * Возвращаем исходный массив на основе строки и длинный массива, который запомнили на этапе конструктора
+         * @param compactString
+         * @param lengthArray
+         * @return
+         */
         private static short[] deserializeArray(String compactString, int lengthArray) {
             short[] array = new short[lengthArray];
             int stepDeserializeArray = 0;

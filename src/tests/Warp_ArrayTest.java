@@ -1,17 +1,21 @@
 package tests;
 
 import org.junit.jupiter.api.Test;
-import worktask.Warperr_Array;
+import worktask.Warper_Array;
 
 import java.util.Random;
 
+/**
+ * Для простоты и удобства, сделал метод generateCompactString, чтобы миновать процесс записи в файл и сразу получить
+ * строковое представление.
+ */
 class Warp_ArrayTest {
 
     @Test
     void shortArray(){
         int[] ints = new Random().ints(10, 1, 30).toArray();
         short[] inShort=convertIntsToShorts(ints);
-        Warperr_Array warperr_array=new Warperr_Array(inShort);
+        Warper_Array warperr_array=new Warper_Array(inShort);
         warperr_array.generateCompactString();
         warperr_array.getStatistic();
         System.out.println("-".repeat(50));
@@ -21,7 +25,7 @@ class Warp_ArrayTest {
     void random50Digit(){
         int[] ints = new Random().ints(50, 1, 300).toArray();
         short[] inShort=convertIntsToShorts(ints);
-        Warperr_Array warperr_array=new Warperr_Array(inShort);
+        Warper_Array warperr_array=new Warper_Array(inShort);
         warperr_array.generateCompactString();
         warperr_array.getStatistic();
         System.out.println("-".repeat(50));
@@ -31,7 +35,7 @@ class Warp_ArrayTest {
     void random100Digit(){
         int[] ints = new Random().ints(100, 1, 300).toArray();
         short[] inShort=convertIntsToShorts(ints);
-        Warperr_Array warperr_array=new Warperr_Array(inShort);
+        Warper_Array warperr_array=new Warper_Array(inShort);
         warperr_array.generateCompactString();
         warperr_array.getStatistic();
         System.out.println("-".repeat(50));
@@ -41,7 +45,7 @@ class Warp_ArrayTest {
     void random500Digit(){
         int[] ints = new Random().ints(500, 1, 300).toArray();
         short[] inShort=convertIntsToShorts(ints);
-        Warperr_Array warperr_array=new Warperr_Array(inShort);
+        Warper_Array warperr_array=new Warper_Array(inShort);
         warperr_array.generateCompactString();
         warperr_array.getStatistic();
         System.out.println("-".repeat(50));
@@ -51,7 +55,7 @@ class Warp_ArrayTest {
     void random1000Digit(){
         int[] ints = new Random().ints(1000, 1, 300).toArray();
         short[] inShort=convertIntsToShorts(ints);
-        Warperr_Array warperr_array=new Warperr_Array(inShort);
+        Warper_Array warperr_array=new Warper_Array(inShort);
         warperr_array.generateCompactString();
         warperr_array.getStatistic();
         System.out.println("-".repeat(50));
@@ -61,7 +65,7 @@ class Warp_ArrayTest {
     void randomOnceDigit(){
         int[] ints = new Random().ints(900, 1, 10).toArray();
         short[] inShort=convertIntsToShorts(ints);
-        Warperr_Array warperr_array=new Warperr_Array(inShort);
+        Warper_Array warperr_array=new Warper_Array(inShort);
         warperr_array.generateCompactString();
         warperr_array.getStatistic();
         System.out.println("-".repeat(50));
@@ -72,7 +76,7 @@ class Warp_ArrayTest {
     void randomTwiceDigit(){
         int[] ints = new Random().ints(900, 10, 100).toArray();
         short[] inShort=convertIntsToShorts(ints);
-        Warperr_Array warperr_array=new Warperr_Array(inShort);
+        Warper_Array warperr_array=new Warper_Array(inShort);
         warperr_array.generateCompactString();
         warperr_array.getStatistic();
         System.out.println("-".repeat(50));
@@ -82,7 +86,7 @@ class Warp_ArrayTest {
     void randomtriplesDigit(){
         int[] ints = new Random().ints(900, 100, 300).toArray();
         short[] inShort=convertIntsToShorts(ints);
-        Warperr_Array warperr_array=new Warperr_Array(inShort);
+        Warper_Array warperr_array=new Warper_Array(inShort);
         warperr_array.generateCompactString();
         warperr_array.getStatistic();
         System.out.println("-".repeat(50));
